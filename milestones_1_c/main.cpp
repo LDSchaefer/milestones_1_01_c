@@ -4,7 +4,6 @@
     public:
         int a;
         int b;
-        int r;
         int *arr;
         int size;
         int *old_arr;
@@ -20,23 +19,10 @@
             std::cin >> cols;
             b = cols;
             new_arr = size_arr(rows,cols);
-            init_arr(rows,cols,new_arr);
             return arr = new_arr;
         }
 
 
-        int init_arr(int a,int b, int *arr)
-        {
-            for(int i=0; i<a; i++)
-               {
-                   for(int j=0; j<b; j++)
-                   {
-                       r = 0;
-                       arr[i * size + j] = r;
-                   }
-               }
-            return 0;
-        }
         int print(int a,int b, int *arr)
         {
             std::cout<< "Aktueller Zustand der Matrix:"<<std::endl;
@@ -54,13 +40,25 @@
 
         int *size_arr(int arg1,int arg2){
             size = arg1;
-            arr = new int[arg1 * arg2];
-            return arr;
+            int r;
+            int *tem_arr = new int[arg1 * arg2];
+            for(int i=0; i<a; i++)
+               {
+                   for(int j=0; j<b; j++)
+                   {
+                       r = 0;
+                       tem_arr[i * size + j] = r;
+                   }
+               }
+            return tem_arr;
         }
 
-        int *copy_array(int *arr)
+        int *copy_array()
         {
-            return old_arr=arr;
+            int *temp_arr = arr;
+            arr = old_arr;
+            old_arr = temp_arr;
+            return arr;
         }
         int *change(int *arr)
                 {
@@ -75,11 +73,17 @@
                     arr[rows * size + cols] = stat;
                     return old_arr=arr;
                 }
-        int *evo(int *arr)
+        int *evo()
         {
             int k_temp;
             int l_temp;
             int count = 0;
+            arr[5 * size + 5] = 1;
+            arr[6 * size + 5] = 1;
+            arr[5 * size + 6] = 1;
+            arr[6 * size + 6] = 1;
+            arr[7 * size + 6] = 1;
+            arr[7 * size + 5] = 1;
 
             for(int i=0; i<a;i++)
             {
@@ -127,24 +131,24 @@
 
                     if(arr[i * size + j] == 1 and count<=1)
                     {
-                        arr[i * size + j] = 0;
+                        old_arr[i * size + j] = 0;
                     }
                     if(arr[i * size + j] == 1 and(count== 2 or count==3))
                     {
-                        arr[i * size + j] = 1;
+                        old_arr[i * size + j] = 1;
                     }
                     if(arr[i * size + j] == 1 and count>=4)
                     {
-                        arr[i * size + j] = 0;
+                        old_arr[i * size + j] = 0;
                     }
                     if(arr[i * size + j] == 0 and count==3)
                     {
-                        arr[i * size + j] = 1;
+                        old_arr[i * size + j] = 1;
                     }
                     count = 0;
                 }
             }
-            copy_array(arr);
+            std::cout<<old_arr<<"\t"<<arr<<std::endl;
             return arr;
         }
 
@@ -153,21 +157,22 @@
             a=arg1;
             b=arg2;
             arr = size_arr(arg1, arg2);
-            init_arr(a,b,arr);
+            old_arr = size_arr(arg1, arg2);
+
         }
     };
 
 
     int main()
     {
-        Field f(30,30);
+        Field f(10,10);
         f.print(f.a, f.b, f.arr);
-        f.val(f.a, f.b);
+        //f.copy_array();
+                        std::cout<<f.old_arr<<"\t"<<f.arr<<std::endl;
+        f.evo();
+        std::cout<<"Evolutionsschritt"<<std::endl;
         f.print(f.a, f.b, f.arr);
-        f.copy_array(f.arr);
-        f.print(f.a,f.b,f.old_arr);
-        f.change(f.arr);
-        f.print(f.a,f.b,f.old_arr);
+        f.print(f.a, f.b, f.old_arr);
       return 0;
     }
 
