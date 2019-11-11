@@ -54,18 +54,18 @@ public:
                    tem_arr[i * size + j] = r;
                }
            }
-        tem_arr[0 * size + 0] = 1;
-        tem_arr[1 * size + 0] = 1;
-        tem_arr[2 * size + 0] = 1;
-        tem_arr[0 * size + 2] = 1;
-        tem_arr[0 * size + 3] = 1;
-        tem_arr[1 * size + 3] = 1;
-        tem_arr[2 * size + 3] = 1;
-        tem_arr[2 * size + 2] = 1;
-        tem_arr[3 * size + 3] = 1;
-        tem_arr[3 * size + 2] = 1;
-        tem_arr[3 * size + 4] = 1;
-        tem_arr[9 * size + 9] = 1;
+        //tem_arr[0 * size + 0] = 1;
+        //tem_arr[1 * size + 0] = 1;
+        //tem_arr[2 * size + 0] = 1;
+        //tem_arr[0 * size + 2] = 1;
+        //tem_arr[0 * size + 3] = 1;
+        //tem_arr[1 * size + 3] = 1;
+        //tem_arr[2 * size + 3] = 1;
+        //tem_arr[2 * size + 2] = 1;
+        //tem_arr[3 * size + 3] = 1;
+        //tem_arr[3 * size + 2] = 1;
+        //tem_arr[3 * size + 4] = 1;
+        //tem_arr[9 * size + 9] = 1;
         return tem_arr;
     }
 
@@ -194,9 +194,63 @@ public:
             std::cout << "Moechten sie einen evolutions Schritt vollziehen? ( [1] = ja, [2] = nein)" << std::endl;
             std::cin >> frage;
         }
+        std::cout << "Moechten sie einen Datei importieren? ( [1] = ja, [2] = nein)" << std::endl;
+        std::cin >> frage;
+        if(frage == 1)
+        {
+            std::string path;
+            std::cout <<"Geben sie den Datei pfad ein: " <<std::endl;
+            std::cin >> path;
+            import(path);
+            std::cout << "Moechten sie einen evolutions Schritt vollziehen? ( [1] = ja, [2] = nein)" << std::endl;
+            std::cin >> frage;
+        }
+        std::cout <<"Möchten sie das Programm verlassen?( [1] = ja, [2] = nein)"<<std::endl;
+        std::cin >> frage;
+        if(frage == 1)
+        {
+        exit(0);
+        }
+        u_control();
         return 0;
     }
+    int to_int(std::string str)
+    {
+        std::stringstream val(str);
+        int x = 0;
+        val>>x;
+        return x;
+    }
+    int import(std::string i_path){
+        std::ifstream data(i_path);
+        std::string colum;
+        int count=0;
+        std::getline(data, colum);
+        int col = to_int(colum);
+        a = col;
+        std::getline(data, colum);
+        int row = to_int(colum);
+        b = row;
+        arr = size_arr(a,b);
+        count = 2;
+        for(size_t zeile = 0; std::getline(data, colum); ++zeile){
+            for(size_t columnindex = 0; columnindex < col; ++columnindex)
+            {
+                const char & x = colum[columnindex];
 
+                if(x == 'o')
+                {
+                    arr[zeile*size + columnindex] = 0;
+                }
+                if(x == '*')
+                {
+                    arr[zeile*size + columnindex] = 1;
+                }
+            }
+        }
+        print(a,b,arr);
+        return 0;
+    }
 
 
 
@@ -208,64 +262,20 @@ public:
         b=arg2;
         arr = size_arr(arg1, arg2);
         old_arr = size_arr(arg1, arg2);
-        //u_control();
+        u_control();
     }
 };
 
-int to_int(std::string str)
-{
-    std::stringstream val(str);
-    int x = 0;
-    val>>x;
-    return x;
-}
+
 
 int main()
 {
     Field f(10,10);
-    std::ifstream data("beispieldatei_cellularautomaton.txt");
-    std::string colum;
-    int count=0;
-    while(std::getline(data, colum))
-    {
-        int col = to_int(colum);
-        count++;
-        if(colum.size()==2 and count == 1)
-        {
-            f.a = to_int(colum);
-            continue;
-        }
-        if(colum.size()==2 and count == 2)
-        {
-            f.b = to_int(colum);
-            continue;
-        }
-        f.size_arr(f.a,f.b);
-        for(int i=0; i<col; i++)
-        {
-            if(colum[i] == 'o')
-            {
-                f.arr[col * f.size + i] = 0;
-            }
-            else if(colum[i] == '*')
-            {
-                f.arr[col * f.size + i] = 1;
-            }
-        }
-    }
 
+//    std::ofstream outp;
+//    outp.open("output.txt");
+//    outp<< f.a;
+//    outp<< f.b;
 
-//    f.copy_array();
-//    f.evo();
-//    std::cout<<"Evolutionsschritt"<<std::endl;
-//    f.print(f.a, f.b, f.arr);
-//    f.print(f.a, f.b, f.old_arr);
-
-    f.print(f.a,f.b,f.arr);
     return 0;
 }
-
-
-
-
-//  std::cout << f.old_arr << "\t" << f.arr << std::endl;
