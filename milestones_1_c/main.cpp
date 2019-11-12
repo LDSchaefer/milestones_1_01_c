@@ -107,63 +107,135 @@ public:
                 {
                     for(int l=j-1; l<=j+1; l++)
                     {
-                     if(k==l)
-                     {
+                         if(k==l)
+                         {
                          continue;
-                     }
-                     else
-                     {
-                         k_temp = k;
-                         l_temp = l;
-                      if(k<0)
-                     {
-                         k_temp = k + a;
+                         }
+                         else
+                         {
+                             k_temp = k;
+                             l_temp = l;
+                             if(k<0)
+                             {
+                                 k_temp = k + a;
+                             }
+                             if(l<0)
+                             {
+                                 l_temp = l + b;
 
-                     }
-                      if(l<0)
-                     {
-                         l_temp = l + b;
+                             }
+                             if(k>a)
+                             {
+                                 k_temp = k - a;
+                             }
+                             if(l>b)
+                             {
+                                 l_temp = l - b;
 
-                     }
-                      if(k>a)
-                     {
-                         k_temp = k - a;
-
-                     }
-                      if(l>b)
-                     {
-                         l_temp = l - b;
-
-                     }
-                      if(arr[k_temp * size + l_temp] == 1)
-                      {
-                          count++;
-                      }
-                     }
+                             }
+                             if(arr[k_temp * size + l_temp] == 1)
+                             {
+                             count++;
+                             }
+                         }
                     }
                 }
 
                 if(arr[i * size + j] == 1 and count<=1)
                 {
                     old_arr[i * size + j] = 0;
+                    std::cout<<count;
                 }
                 if(arr[i * size + j] == 1 and (count== 2 or count==3))
                 {
                     old_arr[i * size + j] = 1;
+                    std::cout<<count;
                 }
                 if(arr[i * size + j] == 1 and count>=4)
                 {
                     old_arr[i * size + j] = 0;
+                    std::cout<<count;
                 }
                 if(arr[i * size + j] == 0 and count==3)
                 {
                     old_arr[i * size + j] = 1;
+                    std::cout<<count;
                 }
                 count = 0;
             }
         }
         return arr;
     }
+
+    int to_int(std::string str)
+    {
+        std::stringstream val(str);
+        int x = 0;
+        val>>x;
+        return x;
+    }
+    int import(std::string i_path){
+        std::ifstream data(i_path + ".txt");
+        std::string colum;
+        std::getline(data, colum);
+        int col = to_int(colum);
+        a = col;
+        std::getline(data, colum);
+        int row = to_int(colum);
+        b = row;
+        arr = size_arr(a,b);
+        for(size_t zeile = 0; std::getline(data, colum); ++zeile){
+            for(size_t columnindex = 0; columnindex < col; ++columnindex)
+            {
+                const char & x = colum[columnindex];
+
+                if(x == 'o')
+                {
+                    arr[zeile* size + columnindex] = 0;
+                }
+                if(x == '*')
+                {
+                    arr[zeile* size + columnindex] = 1;
+                }
+            }
+        }
+        print(a,b,arr);
+        return 0;
+    }
+
+
+    int e_port(std::string e_path)
+    {
+        std::string adress = e_path + ".txt";
+        std::ofstream outp;
+        outp.open(adress);
+        outp<< a <<std::endl;
+        outp<< b <<std::endl;
+        for(int i=0; i<a; i++)
+        {
+                for(int j = 0; j<b; j++)
+                {
+                    char c;
+                    if(arr[i * size + j] == 0)
+                    {
+                        c=arr[i * size + j]+111;
+                    }
+                    else
+                    {
+                        c= arr[i * size + j]+41;
+                    }
+                    outp<< c;
+                    if((j+1)%a == 0)
+                    {
+                        outp << "" << std::endl;
+                    }
+            }
+        }
+        outp.close();
+        return 0;
+    }
+
+
     int u_control()
     {
         int frage;
@@ -194,12 +266,36 @@ public:
             std::cout << "Moechten sie einen evolutions Schritt vollziehen? ( [1] = ja, [2] = nein)" << std::endl;
             std::cin >> frage;
         }
+        std::cout << "Moechten sie einen Datei importieren? ( [1] = ja, [2] = nein)" << std::endl;
+        std::cin >> frage;
+        if(frage == 1)
+        {
+            std::string path;
+            std::cout <<"Geben sie den Datei pfad ein: " <<std::endl;
+            std::cin >> path;
+            import(path);
+        }
+        std::cout << "Moechten sie Den aktuellen Zustand exportieren? ( [1] = ja, [2] = nein)" << std::endl;
+        std::cin >> frage;
+        if(frage == 1)
+        {
+            std::string path;
+            std::cout <<"Geben sie den Datei pfad ein: " <<std::endl;
+            std::cin >> path;
+            e_port(path);
+        }
+        std::cout <<"Moechten sie das Programm verlassen?( [1] = ja, [2] = nein)"<<std::endl;
+        std::cin >> frage;
+        if(frage == 1)
+        {
+            exit(0);
+        }
+        else
+        {
+            u_control();
+        }
         return 0;
     }
-
-
-
-
 
 
     Field(int arg1,int arg2)
@@ -208,64 +304,20 @@ public:
         b=arg2;
         arr = size_arr(arg1, arg2);
         old_arr = size_arr(arg1, arg2);
-        //u_control();
+        u_control();
     }
 };
 
-int to_int(std::string str)
-{
-    std::stringstream val(str);
-    int x = 0;
-    val>>x;
-    return x;
-}
+
 
 int main()
 {
     Field f(10,10);
-    std::ifstream data("beispieldatei_cellularautomaton.txt");
-    std::string colum;
-    int count=0;
-    while(std::getline(data, colum))
-    {
-        int col = to_int(colum);
-        count++;
-        if(colum.size()==2 and count == 1)
-        {
-            f.a = to_int(colum);
-            continue;
-        }
-        if(colum.size()==2 and count == 2)
-        {
-            f.b = to_int(colum);
-            continue;
-        }
-        f.size_arr(f.a,f.b);
-        for(int i=0; i<col; i++)
-        {
-            if(colum[i] == 'o')
-            {
-                f.arr[col * f.size + i] = 0;
-            }
-            else if(colum[i] == '*')
-            {
-                f.arr[col * f.size + i] = 1;
-            }
-        }
-    }
 
+//    std::ofstream outp;
+//    outp.open("output.txt");
+//    outp<< f.a;
+//    outp<< f.b;
 
-//    f.copy_array();
-//    f.evo();
-//    std::cout<<"Evolutionsschritt"<<std::endl;
-//    f.print(f.a, f.b, f.arr);
-//    f.print(f.a, f.b, f.old_arr);
-
-    f.print(f.a,f.b,f.arr);
     return 0;
 }
-
-
-
-
-//  std::cout << f.old_arr << "\t" << f.arr << std::endl;
