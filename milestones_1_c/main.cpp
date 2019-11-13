@@ -21,7 +21,7 @@ public:
         std::cout << "Anzahl Spalten:" << std::endl;
         std::cin >> cols;
         b = cols;
-        new_arr = size_arr(rows, cols);
+        new_arr = resize_arr(rows, cols);
         return arr = new_arr;
     }
 
@@ -55,6 +55,23 @@ public:
                }
            }
         return tem_arr;
+    }
+
+
+    int *resize_arr(int arg1,int arg2)
+    {
+        size = arg1;
+        int r;
+        int *temp_arr = new int[arg1 * arg2];
+        for(int i=0; i<a; i++)
+            {
+                for(int j=0; j<b; j++)
+                {
+                    r = arr[i* size +j];
+                    temp_arr[i * size + j] = r;
+                }
+            }
+        return temp_arr;
     }
 
 
@@ -137,7 +154,7 @@ public:
 
             }
         }
-        return arr;
+        return arr=old_arr;
     }
 
 
@@ -174,7 +191,7 @@ public:
             }
         }
         print(a,b,arr);
-        return old_arr = arr;
+        return arr;
     }
 
 
@@ -237,6 +254,7 @@ public:
         {
             evo();
             print(a, b, old_arr);
+            print(a, b, arr);
             std::cout << "Moechten sie einen evolutions Schritt vollziehen? ( [1] = ja, [2] = nein)" << std::endl;
             std::cin >> frage;
         }
