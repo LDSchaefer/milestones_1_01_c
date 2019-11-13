@@ -10,19 +10,20 @@ public:
     int *arr;
     int size;
     int *old_arr;
+    int old_a;
+    int old_b;
 
 
     int *val(int rows, int cols)
     {
-        int *new_arr;
         std::cout << "Anzahl Zeilen:" << std::endl;
         std::cin >> rows;
         a = rows;
         std::cout << "Anzahl Spalten:" << std::endl;
         std::cin >> cols;
         b = cols;
-        new_arr = resize_arr(rows, cols);
-        return arr = new_arr;
+        arr = resize_arr(rows, cols);
+        return arr;
     }
 
 
@@ -54,24 +55,41 @@ public:
                    tem_arr[i * size + j] = r;
                }
            }
+        old_a = a;
+        old_b = b;
         return tem_arr;
     }
 
 
     int *resize_arr(int arg1,int arg2)
     {
-        size = arg1;
+        int new_size = arg1;
         int r;
-        int *temp_arr = new int[arg1 * arg2];
+        int *tem_arr = new int[arg1 * arg2];
         for(int i=0; i<a; i++)
-            {
-                for(int j=0; j<b; j++)
-                {
-                    r = arr[i* size +j];
-                    temp_arr[i * size + j] = r;
-                }
-            }
-        return temp_arr;
+           {
+               for(int j=0; j<b; j++)
+               {
+                   if (old_a>i and old_b> j){
+                       if(arg1>arg2)
+                       {
+                           new_size=new_size-1;
+                       }
+                       r = arr[i* size +j];
+                       tem_arr[i * new_size + j] = r;
+                       r=0;
+
+                   }
+                   else {
+                       r = 0;
+                       tem_arr[i * size + j] = r;
+                   }
+               }
+           }
+        size=new_size;
+        old_a = a;
+        old_b = b;
+        return tem_arr;
     }
 
 
