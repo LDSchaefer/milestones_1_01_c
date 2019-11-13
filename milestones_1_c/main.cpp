@@ -271,6 +271,7 @@ public:
         while(frage == 1)
         {
             evo();
+            old_arr = size_arr(a,b);
             print(a, b, old_arr);
             print(a, b, arr);
             std::cout << "Moechten sie einen evolutions Schritt vollziehen? ( [1] = ja, [2] = nein)" << std::endl;
